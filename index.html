@@ -63,6 +63,20 @@ const stages = [
   { id:9, name:'Pitch', short:'Apresentar', icon:'presentation', color:'#073B6F', time:5, objective:'Comunicar a proposta de forma clara, objetiva e convincente.', guide:['Cada grupo terá 5 minutos para apresentar:','O Problema','A Solução','O Diferencial','Os Benefícios','Os Próximos passos'] }
 ];
 
+// Links dos Agentes do ChatGPT por etapa.
+// Substitua cada string vazia pelo link público/compartilhável do respectivo agente.
+const aiAssistants = {
+  1: { name:'Assistente de Brainstorming', url:'https://chatgpt.com/g/g-6a75c53abf788191bc6f8b25f781ba02-assistente-de-brainstorming' },
+  2: { name:'Assistente de Card Sorting', url:'https://chatgpt.com/g/g-6a75c5f59b408191878570d8054e5fc3-assistente-de-card-sorting' },
+  3: { name:'Assistente de Priorização', url:'https://chatgpt.com/g/g-6a75c6866a348191a3c8d4309837cdc3-assistente-de-priorizacao' },
+  4: { name:'Assistente da Matriz CSD', url:'https://chatgpt.com/g/g-6a75ca3721448191a3d5f8f9ad3e9651-assistente-matriz-csd' },
+  5: { name:'Assistente de Como Podemos?', url:'https://chatgpt.com/g/g-6a75cb1326d4819194a6dd2e8469b570-assistente-como-podemos' },
+  6: { name:'Assistente de Benchmarking', url:'https://chatgpt.com/g/g-6a75cb9e7f94819195e461cb24d8e88f-assistente-de-benchmarking' },
+  7: { name:'Assistente de Brainwriting', url:'https://chatgpt.com/g/g-6a75cc023a308191bf0767412786c722-assistente-de-brainwriting' },
+  8: { name:'Assistente de Mapa Conceitual', url:'https://chatgpt.com/g/g-6a75ccd22e708191b0c3cb846c05ac01-assistente-de-mapa-conceitual' },
+  9: { name:'Assistente de Pitch', url:'https://chatgpt.com/g/g-6a75cd2b5a908191954685355ef62136-assistente-de-pitch' }
+};
+
 const starter = {
   ideas:['Postura inadequada nas bancadas','Falta de apoio psicológico','Falta de engajamento no DDS', 'Alertas do Uso de EPI','Orientação ergonômica no posto'],
   groups:[{name:'Ergonomia',items:['Postura inadequada nas bancadas','Orientação ergonômica no posto']},{name:'Saúde',items:['Falta de apoio psicológico']},{name:'Segurança do Trabalho',items:['Falta de engajamento no DDS', 'Alertas do Uso de EPI']}],
@@ -82,6 +96,24 @@ function Button({children,variant='primary',className='',...props}) {
   const styles={primary:'bg-brand-600 text-white hover:bg-brand-800 shadow-lift',secondary:'bg-white text-brand-800 border border-brand-100 hover:bg-brand-50',ghost:'text-muted hover:bg-brand-50 hover:text-brand-800',danger:'text-red-700 hover:bg-red-50'};
   return <button className={`min-h-11 rounded-xl px-4 py-2.5 font-bold transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed ${styles[variant]} ${className}`} {...props}>{children}</button>
 }
+function AIAssistantButton({stage}) {
+  const assistant=aiAssistants[stage.id];
+  const configured=Boolean(assistant?.url && /^https?:\/\//i.test(assistant.url));
+  const classes="screen-only min-h-11 rounded-xl px-4 py-3 font-bold transition flex items-center justify-center gap-3 shrink-0 bg-gradient-to-r from-brand-800 to-purple text-white shadow-lift hover:brightness-110 focus-visible:outline-none";
+
+  if(configured) return <a href={assistant.url} target="_blank" rel="noopener noreferrer" className={classes} aria-label={`Abrir ${assistant.name} em nova aba`}>
+    <Icon name="bot"/>
+    <span className="text-left leading-tight"><strong className="block text-sm">Assistente de IA</strong><small className="block text-blue-100 font-semibold mt-0.5">Abrir agente da etapa</small></span>
+    <Icon name="external-link" size={17}/>
+  </a>;
+
+  return <button type="button" className={`${classes} opacity-80`} onClick={()=>alert(`Link do Assistente de IA da etapa ${stage.id} ainda não configurado. Preencha aiAssistants[${stage.id}].url no arquivo HTML.`)} aria-label={`Assistente de IA da etapa ${stage.id}: link ainda não configurado`}>
+    <Icon name="bot"/>
+    <span className="text-left leading-tight"><strong className="block text-sm">Assistente de IA</strong><small className="block text-blue-100 font-semibold mt-0.5">Configurar link do agente</small></span>
+    <Icon name="link" size={17}/>
+  </button>;
+}
+
 function ExampleCard({title,children,tone='blue'}) {
   const tones={blue:'bg-brand-50 border-brand-100 text-brand-900',amber:'bg-amber-50 border-amber-100 text-amber-900',green:'bg-green-50 border-green-100 text-green-900',purple:'bg-purple-50 border-purple-100 text-purple-900',rose:'bg-rose-50 border-rose-100 text-rose-900'};
   return <section className={`rounded-2xl border p-5 sm:p-6 min-w-0 ${tones[tone]||tones.blue}`}><h3 className="font-display font-bold text-lg mb-4">{title}</h3>{children}</section>;
@@ -201,8 +233,11 @@ function App(){
             <span className="w-14 h-14 rounded-2xl text-white grid place-items-center shrink-0" style={{background:stage.color}}><Icon name={stage.icon} size={28}/></span>
             <div className="min-w-0"><p className="text-xs font-extrabold tracking-widest text-muted">ETAPA {stage.id} DE 9</p><h1 className="font-display text-2xl sm:text-4xl font-extrabold text-brand-900 break-words">{stage.name}</h1><p className="text-muted mt-2 max-w-3xl"><strong>Objetivo:</strong> {stage.objective}</p></div>
           </div>
-          <div className="screen-only rounded-xl bg-amber-50 text-amber-800 px-4 py-3 font-display font-extrabold flex gap-2 shrink-0" aria-label={`Duração sugerida: ${stage.time} minutos`}>
-            <Icon name="clock-3"/>{stage.time} min
+          <div className="screen-only flex flex-col sm:flex-row xl:flex-col 2xl:flex-row gap-3 shrink-0 w-full xl:w-auto">
+            <AIAssistantButton stage={stage}/>
+            <div className="rounded-xl bg-amber-50 text-amber-800 px-4 py-3 font-display font-extrabold flex items-center justify-center gap-2 shrink-0" aria-label={`Duração sugerida: ${stage.time} minutos`}>
+              <Icon name="clock-3"/>{stage.time} min
+            </div>
           </div>
         </header>
 
