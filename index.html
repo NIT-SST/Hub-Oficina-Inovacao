@@ -63,18 +63,11 @@ const stages = [
   { id:9, name:'Pitch', short:'Apresentar', icon:'presentation', color:'#073B6F', time:5, objective:'Comunicar a proposta de forma clara, objetiva e convincente.', guide:['Cada grupo terá 5 minutos para apresentar:','O Problema','A Solução','O Diferencial','Os Benefícios','Os Próximos passos'] }
 ];
 
-// Links dos Agentes do ChatGPT por etapa.
-// Substitua cada string vazia pelo link público/compartilhável do respectivo agente.
+// Links dos Assistentes de IA disponíveis somente nas etapas 4, 5 e 6.
 const aiAssistants = {
-  1: { name:'Assistente de Brainstorming', url:'https://chatgpt.com/g/g-6a75c53abf788191bc6f8b25f781ba02-assistente-de-brainstorming' },
-  2: { name:'Assistente de Card Sorting', url:'https://chatgpt.com/g/g-6a75c5f59b408191878570d8054e5fc3-assistente-de-card-sorting' },
-  3: { name:'Assistente de Priorização', url:'https://chatgpt.com/g/g-6a75c6866a348191a3c8d4309837cdc3-assistente-de-priorizacao' },
   4: { name:'Assistente da Matriz CSD', url:'https://chatgpt.com/g/g-6a75ca3721448191a3d5f8f9ad3e9651-assistente-matriz-csd' },
   5: { name:'Assistente de Como Podemos?', url:'https://chatgpt.com/g/g-6a75cb1326d4819194a6dd2e8469b570-assistente-como-podemos' },
-  6: { name:'Assistente de Benchmarking', url:'https://chatgpt.com/g/g-6a75cb9e7f94819195e461cb24d8e88f-assistente-de-benchmarking' },
-  7: { name:'Assistente de Brainwriting', url:'https://chatgpt.com/g/g-6a75cc023a308191bf0767412786c722-assistente-de-brainwriting' },
-  8: { name:'Assistente de Mapa Conceitual', url:'https://chatgpt.com/g/g-6a75ccd22e708191b0c3cb846c05ac01-assistente-de-mapa-conceitual' },
-  9: { name:'Assistente de Pitch', url:'https://chatgpt.com/g/g-6a75cd2b5a908191954685355ef62136-assistente-de-pitch' }
+  6: { name:'Assistente de Benchmarking', url:'https://chatgpt.com/g/g-6a75cb9e7f94819195e461cb24d8e88f-assistente-de-benchmarking' }
 };
 
 const starter = {
@@ -234,7 +227,7 @@ function App(){
             <div className="min-w-0"><p className="text-xs font-extrabold tracking-widest text-muted">ETAPA {stage.id} DE 9</p><h1 className="font-display text-2xl sm:text-4xl font-extrabold text-brand-900 break-words">{stage.name}</h1><p className="text-muted mt-2 max-w-3xl"><strong>Objetivo:</strong> {stage.objective}</p></div>
           </div>
           <div className="screen-only flex flex-col sm:flex-row xl:flex-col 2xl:flex-row gap-3 shrink-0 w-full xl:w-auto">
-            <AIAssistantButton stage={stage}/>
+            {[4,5,6].includes(stage.id) && <AIAssistantButton stage={stage}/>}
             <div className="rounded-xl bg-amber-50 text-amber-800 px-4 py-3 font-display font-extrabold flex items-center justify-center gap-2 shrink-0" aria-label={`Duração sugerida: ${stage.time} minutos`}>
               <Icon name="clock-3"/>{stage.time} min
             </div>
